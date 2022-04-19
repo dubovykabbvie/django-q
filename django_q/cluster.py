@@ -475,7 +475,8 @@ def save_task(task, broker: Broker):
     close_old_django_connections()
     try:
         with db.transaction.atomic():
-            last = Success.objects.last().select_for_update()
+            last = Success.objects.last()
+            last = Success.objects.select_for_update().filter(id=last.id)
             if task["success"] and 0 < Conf.SAVE_LIMIT <= Success.objects.count():
                 last.delete()
         # check if this task has previous results
