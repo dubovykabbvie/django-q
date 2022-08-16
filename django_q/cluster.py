@@ -587,8 +587,8 @@ def scheduler(broker: Broker = None):
         database_to_use = {"using": Conf.ORM} if not Conf.HAS_REPLICA else {}
         with db.transaction.atomic(**database_to_use):
             for s in (
-                Schedule.objects.select_for_update()
-                .exclude(repeats=0)
+                # Schedule.objects.select_for_update()
+                Schedule.objects.exclude(repeats=0)
                 .filter(next_run__lt=timezone.now())
                 .filter(
                     db.models.Q(cluster__isnull=True) | db.models.Q(cluster=Conf.PREFIX)
